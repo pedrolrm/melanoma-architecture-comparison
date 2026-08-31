@@ -1,0 +1,16 @@
+# Deep Learning Core
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Processamento de Dados e Imagens
+numpy>=1.24.0
+pandas>=2.0.0
+Pillow>=9.5.0
+
+# Treinamento e Avaliação
+scikit-learn>=1.2.0
+tqdm>=4.65.0
+
+# Visualização e Experimentação
+matplotlib>=3.7.0
+jupyter>=1.0.0
