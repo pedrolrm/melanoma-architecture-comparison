@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
-
+import torchvision.models as models
 
 class MelalomaVGG16(nn.Module):
-    def __init__(self):
+    def __init__(self, pretrained=False):
         super(MelalomaVGG16, self).__init__()
 
         self.features = nn.Sequential(
@@ -56,11 +56,16 @@ class MelalomaVGG16(nn.Module):
             nn.Sigmoid(),
         )
 
+        if pretrained:
+            vgg16_pretrained = models.vgg16(weights=models.VGG16_Weights.DEFAULT)
+            self.features.load_state_dict(vgg16_pretrained.features.state_dict())
+            self.classifier[0].load_state_dict(vgg16_pretrained.classifier[0].state_dict())
+            self.classifier[3].load_state_dict(vgg16_pretrained.classifier[3].state_dict())
+
     def forward(self, x):
         x = self.features(x)
         x = torch.flatten(x, start_dim=1, end_dim=-1)
         x = self.classifier(x)
         return x
-
 
 model = MelalomaVGG16()
