@@ -8,8 +8,8 @@ from torch.amp import GradScaler, autocast
 from torch.utils.data import DataLoader, random_split
 from torchvision import datasets, transforms
 
-from mlp import MLP
-from vgg import MelalomaVGG16
+from models.mlp import MLP
+from models.vgg import MelalomaVGG16
 
 def set_seed(seed=42):
     random.seed(seed)
