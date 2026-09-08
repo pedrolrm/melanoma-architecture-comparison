@@ -11,7 +11,7 @@ from torchvision import datasets, transforms
 from models.mlp import MLP
 from models.vgg import MelalomaVGG16
 
-def set_seed(seed=42):
+def set_seed(seed=37):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -54,7 +54,9 @@ def train_single_model(model_name, model, train_loader, val_loader, device, save
 
             with autocast(device_type=device.type, enabled=usa_cuda):
                 preds_prob = model(imagens)
-                loss = criterion(preds_prob, labels)
+
+            with autocast(device_type=device.type, enabled=False):
+                loss = criterion(preds_prob.float(), labels)
 
             scaler.scale(loss).backward()
             scaler.step(optimizer)
@@ -78,7 +80,9 @@ def train_single_model(model_name, model, train_loader, val_loader, device, save
 
                 with autocast(device_type=device.type, enabled=usa_cuda):
                     preds_prob = model(imagens)
-                    loss = criterion(preds_prob, labels)
+
+                with autocast(device_type=device.type, enabled=False):
+                    loss = criterion(preds_prob.float(), labels)
 
                 val_loss += loss.item() * imagens.size(0)
                 preds = (preds_prob >= 0.5).float()
@@ -101,7 +105,7 @@ def train_single_model(model_name, model, train_loader, val_loader, device, save
                 break
 
 def main():
-    seed = 42
+    seed = 37
     set_seed(seed)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
